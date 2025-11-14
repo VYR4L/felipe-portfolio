@@ -10,12 +10,14 @@ import {
   Alert,
   IconButton,
   alpha,
+  CircularProgress,
 } from '@mui/material';
 import SendIcon from '@mui/icons-material/Send';
 import GitHubIcon from '@mui/icons-material/GitHub';
 import LinkedInIcon from '@mui/icons-material/LinkedIn';
 import EmailIcon from '@mui/icons-material/Email';
 import type { ContactFormData } from '../../types';
+import { sendContactMessage } from '../../assets/service/sendForm';
 
 /**
  * Seção Contato - Formulário de contato e links sociais
@@ -24,9 +26,13 @@ export const Contact: React.FC = () => {
   const [formData, setFormData] = useState<ContactFormData>({
     name: '',
     email: '',
+    phone: '',
+    subject: '',
     message: '',
   });
   const [showSuccess, setShowSuccess] = useState(false);
+  const [showError, setShowError] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
 
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
@@ -38,31 +44,35 @@ export const Contact: React.FC = () => {
     }));
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    setIsLoading(true);
+    setShowError(false);
     
-    // Construir o link mailto
-    const subject = encodeURIComponent(`Contato de ${formData.name}`);
-    const body = encodeURIComponent(
-      `Nome: ${formData.name}\nEmail: ${formData.email}\n\nMensagem:\n${formData.message}`
-    );
-    const mailtoLink = `mailto:fkz.zanatt@gmail.com?subject=${subject}&body=${body}`;
-    
-    // Abrir o cliente de e-mail
-    window.location.href = mailtoLink;
-    
-    // Mostrar mensagem de sucesso
-    setShowSuccess(true);
-    
-    // Limpar o formulário
-    setFormData({
-      name: '',
-      email: '',
-      message: '',
-    });
-    
-    // Esconder a mensagem após 5 segundos
-    setTimeout(() => setShowSuccess(false), 5000);
+    try {
+      await sendContactMessage(formData);
+      
+      // Mostrar mensagem de sucesso
+      setShowSuccess(true);
+      
+      // Limpar o formulário
+      setFormData({
+        name: '',
+        email: '',
+        phone: '',
+        subject: '',
+        message: '',
+      });
+      
+      // Esconder a mensagem após 5 segundos
+      setTimeout(() => setShowSuccess(false), 5000);
+    } catch (error) {
+      console.error('Erro ao enviar mensagem:', error);
+      setShowError(true);
+      setTimeout(() => setShowError(false), 5000);
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   const socialLinks = [
@@ -171,7 +181,13 @@ export const Contact: React.FC = () => {
           >
             {showSuccess && (
               <Alert severity="success" sx={{ mb: 3 }}>
-                Seu cliente de e-mail foi aberto. Obrigado pelo contato!
+                Mensagem enviada com sucesso! Obrigado pelo contato, responderei em breve.
+              </Alert>
+            )}
+
+            {showError && (
+              <Alert severity="error" sx={{ mb: 3 }}>
+                Ocorreu um erro ao enviar a mensagem. Por favor, tente novamente ou entre em contato diretamente pelo e-mail.
               </Alert>
             )}
 
@@ -186,6 +202,7 @@ export const Contact: React.FC = () => {
                   required
                   variant="outlined"
                   aria-label="Digite seu nome"
+                  disabled={isLoading}
                 />
                 <TextField
                   fullWidth
@@ -197,6 +214,29 @@ export const Contact: React.FC = () => {
                   required
                   variant="outlined"
                   aria-label="Digite seu e-mail"
+                  disabled={isLoading}
+                />
+                <TextField
+                  fullWidth
+                  label="Telefone (opcional)"
+                  name="phone"
+                  type="tel"
+                  value={formData.phone}
+                  onChange={handleChange}
+                  variant="outlined"
+                  aria-label="Digite seu telefone"
+                  disabled={isLoading}
+                />
+                <TextField
+                  fullWidth
+                  label="Assunto"
+                  name="subject"
+                  value={formData.subject}
+                  onChange={handleChange}
+                  required
+                  variant="outlined"
+                  aria-label="Digite o assunto"
+                  disabled={isLoading}
                 />
                 <TextField
                   fullWidth
@@ -209,16 +249,18 @@ export const Contact: React.FC = () => {
                   rows={6}
                   variant="outlined"
                   aria-label="Digite sua mensagem"
+                  disabled={isLoading}
                 />
                 <Button
                   type="submit"
                   variant="contained"
                   size="large"
-                  endIcon={<SendIcon />}
+                  endIcon={isLoading ? <CircularProgress size={20} color="inherit" /> : <SendIcon />}
                   fullWidth
                   sx={{ py: 1.5 }}
+                  disabled={isLoading}
                 >
-                  Enviar Mensagem
+                  {isLoading ? 'Enviando...' : 'Enviar Mensagem'}
                 </Button>
               </Stack>
             </form>
