@@ -46,7 +46,7 @@ export const Projects: React.FC = () => {
       description:
         'Painel moderno e completo para gerenciamento de gastos pessoais, com deashboards interativos e categorização detalhada',
       technologies: ['React', 'TypeScript', 'Material-UI'],
-      githubUrl: 'https://https://github.com/VYR4L/frontend-expense-tracker',
+      githubUrl: 'https://github.com/VYR4L/frontend-expense-tracker',
     },
   ];
 
