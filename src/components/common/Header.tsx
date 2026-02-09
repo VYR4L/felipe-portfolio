@@ -9,6 +9,7 @@ import {
   useScrollTrigger,
 } from '@mui/material';
 import { ThemeToggleButton } from './ThemeToggleButton';
+import { ThemeSchemeSelector } from './ThemeSchemeSelector';
 
 interface HeaderProps {
   onNavigate: (section: string) => void;
@@ -84,8 +85,11 @@ export const Header: React.FC<HeaderProps> = ({ onNavigate }) => {
             ))}
           </Box>
 
-          {/* Theme Toggle */}
-          <ThemeToggleButton />
+          {/* Theme Controls */}
+          <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>
+            <ThemeSchemeSelector />
+            <ThemeToggleButton />
+          </Box>
         </Toolbar>
       </Container>
     </AppBar>

@@ -25,3 +25,6 @@ export interface ContactFormData {
   subject: string;
   message: string;
 }
+
+// Re-export theme types
+export type { TThemeScheme, TThemeMode, IThemeConfig, IThemeTokens, IThemeSchemeDefinition } from './theme.types';
