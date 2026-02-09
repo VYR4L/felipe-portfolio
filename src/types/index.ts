@@ -2,7 +2,9 @@ export interface Project {
   name: string;
   description: string;
   technologies: string[];
-  githubUrl: string;
+  githubUrl?: string;
+  githubFrontendUrl?: string;
+  githubBackendUrl?: string;
   liveUrl?: string;
 }
 

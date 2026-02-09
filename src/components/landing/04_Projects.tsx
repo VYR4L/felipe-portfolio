@@ -21,6 +21,47 @@ import type { Project } from '../../types';
 export const Projects: React.FC = () => {
   const projects: Project[] = [
     {
+      name: 'Todo List',
+      description:
+      'Um aplicativo de lista de tarefas moderno e escalonável desenvolvido com Next.js 15, TypeScript, Material UI v6, seguindo a arquitetura MVVM e os princípios do Atomic Design.',
+      technologies: ['Next.js', 'TypeScript', 'Material UI', 'MVVM', 'Atomic Design'],
+      githubUrl: 'https://github.com/VYR4L/todo-list-nextjs',
+      liveUrl: 'https://todo-list-nextjs-liart.vercel.app/',
+    },
+    {
+      name: 'PID Tools - Processamento de Imagens Digitais',
+      description:
+      'Projeto de processamento digital de imagens composto por uma API REST em FastAPI e uma interface web moderna em React. Oferece algoritmos clássicos como detecção de bordas, segmentação, filtragem e análise de contornos, acessíveis via uma UI minimalista e intuitiva.',
+      technologies: ['Python', 'FastAPI', 'React', 'Material-UI', 'OpenCV'],
+      githubFrontendUrl: 'https://github.com/VYR4L/filter-applyer-frontend',
+      githubBackendUrl: 'https://github.com/VYR4L/filter-applyer-backend',
+      liveUrl: 'https://pid-tools.vercel.app/',
+    },
+    {
+      name: 'Expense Tracker',
+      description:
+        'Painel moderno e completo para gerenciamento de gastos pessoais, com dashboards interativos e categorização detalhada',
+      technologies: ['React', 'TypeScript', 'Material-UI', 'FastAPI', 'MySQL'],
+      githubFrontendUrl: 'https://github.com/VYR4L/frontend-expense-tracker',
+      githubBackendUrl: 'https://github.com/VYR4L/backend-expense-tracker',
+      liveUrl: 'https://vyral-expense-tracker.netlify.app',
+    },
+    {
+      name: 'Little Ideas',
+      description:
+      'Treinamento de modelos de linguagem customizados com LoRA, usando Unsloth, PyTorch e HuggingFace Transformers. Foco em fine-tuning o projeto brinca com o termo "Poucas ideia" — alguém com pavio curto, direto e sem paciência.',
+      technologies: ['Python', 'PyTorch', 'HuggingFace', 'LoRA'],
+      githubUrl: 'https://github.com/VYR4L/train-little-ideas',
+    },
+    {
+      name: 'Dead By Daylight Hardcore Killer',
+      description:
+      'Um sistema abrangente de gerenciamento de desafios Dead by Daylight construído com React, TypeScript e Material UI. Acompanhe suas hardcore killer runs de Ash IV a Iridescent I com estatísticas detalhadas, gerenciamento de killers e rastreamento financeiro.',
+      technologies: ['React', 'TypeScript', 'Material-UI'],
+      githubUrl: 'https://github.com/VYR4L/DBD-hardcore-killer',
+      liveUrl: 'https://dbd-hardcore-killer.vercel.app/',
+    },
+    {
       name: 'Facial Expression Recognizer',
       description:
         'CNN para reconhecimento de expressões faciais com interface desktop desenvolvida em PyQT6',
@@ -40,13 +81,6 @@ export const Projects: React.FC = () => {
         'Clone do reprodutor do Spotify com funcionalidades de reprodução e gerenciamento de playlists',
       technologies: ['React', 'Node.js', 'Express', 'MongoDB'],
       githubUrl: 'https://github.com/VYR4L/Spotify',
-    },
-    {
-      name: 'Expense Tracker',
-      description:
-        'Painel moderno e completo para gerenciamento de gastos pessoais, com deashboards interativos e categorização detalhada',
-      technologies: ['React', 'TypeScript', 'Material-UI'],
-      githubUrl: 'https://github.com/VYR4L/frontend-expense-tracker',
     },
   ];
 
@@ -149,19 +183,178 @@ export const Projects: React.FC = () => {
                     ))}
                   </Box>
                 </CardContent>
-                <CardActions sx={{ p: 2, pt: 0 }}>
-                  <Button
-                    component="a"
-                    href={project.githubUrl}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    startIcon={<GitHubIcon />}
-                    variant="outlined"
-                    fullWidth
-                    aria-label={`Ver ${project.name} no GitHub`}
-                  >
-                    Ver no GitHub
-                  </Button>
+                <CardActions sx={{ p: 2, pt: 0, gap: 1 }}>
+                  {/* Botão único do GitHub (quando não há separação frontend/backend) */}
+                  {project.githubUrl && !project.githubFrontendUrl && !project.githubBackendUrl && (
+                    <Button
+                      component="a"
+                      href={project.githubUrl}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      startIcon={<GitHubIcon />}
+                      variant="outlined"
+                      fullWidth
+                      aria-label={`Ver ${project.name} no GitHub`}
+                    >
+                      Ver no GitHub
+                    </Button>
+                  )}
+
+                  {/* Botão dividido diagonalmente (quando há frontend E backend) */}
+                  {project.githubFrontendUrl && project.githubBackendUrl && (
+                    <Box
+                      sx={{
+                        position: 'relative',
+                        width: '100%',
+                        height: 42,
+                        overflow: 'hidden',
+                        borderRadius: (theme) => `${theme.shape.borderRadius}px`,
+                        borderWidth: (theme) => {
+                          const radius = typeof theme.shape.borderRadius === 'number' ? theme.shape.borderRadius : 8;
+                          // Neubrutalism tem borderRadius 0
+                          if (radius === 0) return '3px';
+                          // Bauhaus tem borderRadius 2 (ou próximo de 0)
+                          if (radius <= 4) return '2px';
+                          return '1px';
+                        },
+                        borderStyle: 'solid',
+                        borderColor: (theme) => {
+                          const radius = typeof theme.shape.borderRadius === 'number' ? theme.shape.borderRadius : 8;
+                          if (radius <= 4) return theme.palette.divider;
+                          return theme.palette.primary.main;
+                        },
+                        boxShadow: (theme) => {
+                          const radius = typeof theme.shape.borderRadius === 'number' ? theme.shape.borderRadius : 8;
+                          if (radius === 0) return '3px 3px 0px rgba(0, 0, 0, 0.3)';
+                          return 'none';
+                        },
+                        background: (theme) => `
+                          linear-gradient(
+                            to bottom right,
+                            transparent calc(50% - 0.5px),
+                            ${theme.palette.divider} calc(50% - 0.5px),
+                            ${theme.palette.divider} calc(50% + 0.5px),
+                            transparent calc(50% + 0.5px)
+                          )
+                        `,
+                        transition: 'all 0.2s ease',
+                      }}
+                    >
+                      {/* Frontend Button (Parte superior esquerda) */}
+                      <Box
+                        component="a"
+                        href={project.githubFrontendUrl}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        aria-label={`Ver frontend de ${project.name} no GitHub`}
+                        sx={{
+                          position: 'absolute',
+                          top: 2,
+                          left: 0,
+                          width: '100%',
+                          height: '100%',
+                          clipPath: 'polygon(0 0, 100% 0, 0 100%)',
+                          backgroundColor: 'transparent',
+                          display: 'flex',
+                          alignItems: 'flex-start',
+                          justifyContent: 'flex-start',
+                          paddingLeft: 1,
+                          textDecoration: 'none',
+                          color: 'text.primary',
+                          transition: 'all 0.2s ease',
+                          '&:hover': {
+                            backgroundColor: (theme) => alpha(theme.palette.primary.main, 0.08),
+                          },
+                        }}
+                      >
+                        <Box
+                          sx={{
+                            display: 'flex',
+                            alignItems: 'center',
+                            gap: 0.5,
+                            fontSize: '0.875rem',
+                            fontWeight: 600,
+                          }}
+                        >
+                          <GitHubIcon sx={{ fontSize: '1rem' }} />
+                          <span>Frontend</span>
+                        </Box>
+                      </Box>
+
+                      {/* Backend Button (Parte inferior direita) */}
+                      <Box
+                        component="a"
+                        href={project.githubBackendUrl}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        aria-label={`Ver backend de ${project.name} no GitHub`}
+                        sx={{
+                          position: 'absolute',
+                          top: 5,
+                          left: 0,
+                          width: '100%',
+                          height: '100%',
+                          clipPath: 'polygon(100% 0, 100% 100%, 0 100%)',
+                          backgroundColor: 'transparent',
+                          display: 'flex',
+                          alignItems: 'flex-end',
+                          justifyContent: 'flex-end',
+                          padding: 1,
+                          textDecoration: 'none',
+                          color: 'text.primary',
+                          transition: 'all 0.2s ease',
+                          '&:hover': {
+                            backgroundColor: (theme) => alpha(theme.palette.primary.main, 0.08),
+                          },
+                        }}
+                      >
+                        <Box
+                          sx={{
+                            display: 'flex',
+                            alignItems: 'center',
+                            gap: 0.5,
+                            fontSize: '0.875rem',
+                            fontWeight: 600,
+                          }}
+                        >
+                          <GitHubIcon sx={{ fontSize: '1rem' }} />
+                          <span>Backend</span>
+                        </Box>
+                      </Box>
+                    </Box>
+                  )}
+
+                  {/* Botões individuais (quando há apenas um) */}
+                  {project.githubFrontendUrl && !project.githubBackendUrl && (
+                    <Button
+                      component="a"
+                      href={project.githubFrontendUrl}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      startIcon={<GitHubIcon />}
+                      variant="outlined"
+                      fullWidth
+                      aria-label={`Ver frontend de ${project.name} no GitHub`}
+                    >
+                      Ver Frontend
+                    </Button>
+                  )}
+                  {project.githubBackendUrl && !project.githubFrontendUrl && (
+                    <Button
+                      component="a"
+                      href={project.githubBackendUrl}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      startIcon={<GitHubIcon />}
+                      variant="outlined"
+                      fullWidth
+                      aria-label={`Ver backend de ${project.name} no GitHub`}
+                    >
+                      Ver Backend
+                    </Button>
+                  )}
+
+                  {/* Botão Live Demo */}
                   {project.liveUrl && (
                     <Button
                       component="a"
@@ -177,6 +370,7 @@ export const Projects: React.FC = () => {
                     </Button>
                   )}
                 </CardActions>
+                
               </Card>
             ))}
           </Box>
