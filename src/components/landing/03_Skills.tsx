@@ -19,6 +19,8 @@ export const Skills: React.FC = () => {
     'Pandas',
     'NumPy',
     'Django',
+    'Go',
+    'TypeScript',
     'FastAPI',
     'Flask',
     'Java',
@@ -29,6 +31,7 @@ export const Skills: React.FC = () => {
     'Node.js',
     'Bootstrap',
     'MySQL',
+    'PostgreSQL',
     'SQL',
     'Git',
     'GitHub',
@@ -36,10 +39,7 @@ export const Skills: React.FC = () => {
   ];
 
   const studyingSkills = [
-    'Go',
-    'TypeScript',
-    '.NET',
-    'C#',
+  'Next.js',
   ];
 
   return (
